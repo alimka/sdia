@@ -7,8 +7,7 @@ int main()
     int rozmiarSzachownicy, liczbaKwadratow;
     
     while (liczbaKwadratow--)
-    {
-        cin >> 
+    { 
     }
 
 
