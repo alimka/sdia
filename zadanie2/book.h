@@ -1,7 +1,7 @@
 #ifndef BOOK_H
 #define BOOK_H
 
-#include <string>
+
 
 using namespace std;
 
@@ -9,20 +9,20 @@ using namespace std;
 class Book
 {
 public:
-    string imieAktora, nazwiskoAktora, imiePostaci, nazwiskoPostaci;
+    string aktor, postac;
     int pierwszyOdcinek, ostatniOdcinek;
 
     Book* next;
     Book* prev;
 
     Book();
-    Book (string imieAktora, string nazwiskoAktora, string imiePostaci, string nazwiskoPostaci, int pierwszyOdcinek, int ostatniOdcinek);
+    Book (string aktor, string postac, int pierwszyOdcinek, int ostatniOdcinek);
 
     Book& operator[](int q);
     //void operator=(Book& a);
     friend ostream& operator<<(ostream& os, Book& a);
 
-    void dodaj(string imieAktora, string nazwiskoAktora, string imiePostaci, string nazwiskoPostaci, int pierwszyOdcinek, int ostatniOdcinek);
+    void dodaj(string aktor, string postac, int pierwszyOdcinek, int ostatniOdcinek);
     void drukuj();
     void drukuj(int i);
     int ileElementow();

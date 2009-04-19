@@ -1,5 +1,4 @@
 #include <iostream>
-#include <string>
 #include "book.h"
 
 using namespace std;
@@ -10,12 +9,10 @@ Book::Book()
     prev = NULL;
 }
 
-Book::Book (string imieAktora, string nazwiskoAktora, string imiePostaci, string nazwiskoPostaci, int pierwszyOdcinek, int ostatniOdcinek)
+Book::Book (string aktor, string postac, int pierwszyOdcinek, int ostatniOdcinek)
 {
-    this->imieAktora = imieAktora;
-    this->nazwiskoAktora = nazwiskoAktora;
-    this->imiePostaci = imiePostaci;
-    this->nazwiskoPostaci = nazwiskoPostaci;
+    this->aktor = aktor;
+    this->postac = postac;
     this->pierwszyOdcinek = pierwszyOdcinek;
     this->ostatniOdcinek = ostatniOdcinek;
 
@@ -23,9 +20,9 @@ Book::Book (string imieAktora, string nazwiskoAktora, string imiePostaci, string
     prev = NULL;
 }
 
-void Book::dodaj(string imieAktora, string nazwiskoAktora, string imiePostaci, string nazwiskoPostaci, int pierwszyOdcinek, int ostatniOdcinek)
+void Book::dodaj(string aktor, string postac, int pierwszyOdcinek, int ostatniOdcinek)
 {
-    Book *nowy = new Book (imieAktora, nazwiskoAktora, imiePostaci, nazwiskoPostaci, pierwszyOdcinek, ostatniOdcinek);
+    Book *nowy = new Book (aktor, postac, pierwszyOdcinek, ostatniOdcinek);
     Book *ostatni = this;
     while (ostatni->next != NULL)
     {
@@ -41,10 +38,10 @@ void Book::drukuj()
     ostatni = ostatni->next;
     while (ostatni->next != NULL)
     {
-        cout << ostatni->imieAktora<<" "<<ostatni->nazwiskoAktora<<" "<< ostatni->imiePostaci << " " << ostatni->nazwiskoPostaci << " " << ostatni->pierwszyOdcinek << " " << ostatni->ostatniOdcinek << endl;
+        cout << ostatni->aktor<<" "<<ostatni->postac << " " << ostatni->pierwszyOdcinek << " " << ostatni->ostatniOdcinek << endl;
         ostatni = ostatni -> next;
     }
-    cout << ostatni->imieAktora<<" "<<ostatni->nazwiskoAktora<<" "<< ostatni->imiePostaci << " " << ostatni->nazwiskoPostaci << " " << ostatni->pierwszyOdcinek << " " << ostatni->ostatniOdcinek << endl;
+    cout << ostatni->aktor<<" "<< ostatni->postac << " " << ostatni->pierwszyOdcinek << " " << ostatni->ostatniOdcinek << endl;
 }
 
 void Book::drukuj(int i)
@@ -56,19 +53,19 @@ void Book::drukuj(int i)
         ostatni = ostatni -> next;
         licznik++;
     }
-    cout << ostatni->imieAktora<<" "<<ostatni->nazwiskoAktora<<" "<< ostatni->imiePostaci << " " << ostatni->nazwiskoPostaci << " " << ostatni->pierwszyOdcinek << " " << ostatni->ostatniOdcinek << endl;
+    cout << ostatni->aktor<<" "<< ostatni->postac << " " << ostatni->pierwszyOdcinek << " " << ostatni->ostatniOdcinek << endl;
 }
 
 void Book::sortujAktorow(Book& a, int l, int p) //QuickSort
 {
-    string v=a[(l+p)/2].imieAktora;
+    string v=a[(l+p)/2].aktor;
     int i = l;
     int j = p;
     do
     {
-        while (a[i].imieAktora < v)
+        while (a[i].aktor < v)
             i++;
-        while (v < a[j].imieAktora)
+        while (v < a[j].aktor)
             j--;
         if (i <= j)
         {
@@ -105,7 +102,7 @@ void scalaj(Book& a, Book& temp, int l, int v, int p)
 
     while ((l <= left_end) && (v <= p))
     {
-        if (a[l].imiePostaci <= a[v].imiePostaci)
+        if (a[l].postac <= a[v].postac)
         {
             podstaw(temp[tmp_pos], a[l]);
             tmp_pos++;
@@ -155,7 +152,7 @@ Book& Book::operator [](int q)
 
 ostream& operator<<(ostream& os, Book& a)
 {
-    os << a.imieAktora << " " << a.nazwiskoAktora << " " << a.imiePostaci << " " << a.nazwiskoPostaci << " " << a.pierwszyOdcinek << " " << a.ostatniOdcinek << endl;
+    os << a.aktor << " " << a.postac << " " << a.pierwszyOdcinek << " " << a.ostatniOdcinek << endl;
     return os;
 }
 
@@ -183,10 +180,8 @@ int Book::ileElementow()
 
 void podstaw(Book &x, Book &a)
 {
-    x.imieAktora = a.imieAktora;
-    x.imiePostaci = a.imiePostaci;
-    x.nazwiskoAktora = a.nazwiskoAktora;
-    x.nazwiskoPostaci = a.nazwiskoPostaci;
+    x.aktor = a.aktor;
+    x.postac = a.postac;
     x.ostatniOdcinek = a.ostatniOdcinek;
     x.pierwszyOdcinek = a.pierwszyOdcinek;
 }
@@ -195,24 +190,18 @@ void Book::swap(Book& x, Book& a)
 {
     Book tmp;
 
-    tmp.imieAktora = x.imieAktora;
-    tmp.imiePostaci = x.imiePostaci;
-    tmp.nazwiskoAktora = x.nazwiskoAktora;
-    tmp.nazwiskoPostaci = x.nazwiskoPostaci;
+    tmp.aktor = x.aktor;
+    tmp.postac = x.postac;
     tmp.ostatniOdcinek = x.ostatniOdcinek;
     tmp.pierwszyOdcinek = x.pierwszyOdcinek;
 
-    x.imieAktora = a.imieAktora;
-    x.imiePostaci = a.imiePostaci;
-    x.nazwiskoAktora = a.nazwiskoAktora;
-    x.nazwiskoPostaci = a.nazwiskoPostaci;
+    x.aktor = a.aktor;
+    x.postac = a.postac;
     x.ostatniOdcinek = a.ostatniOdcinek;
     x.pierwszyOdcinek = a.pierwszyOdcinek;
 
-    a.imieAktora = tmp.imieAktora;
-    a.imiePostaci = tmp.imiePostaci;
-    a.nazwiskoAktora = tmp.nazwiskoAktora;
-    a.nazwiskoPostaci = tmp.nazwiskoPostaci;
+    a.aktor = tmp.aktor;
+    a.postac = tmp.postac;
     a.ostatniOdcinek = tmp.ostatniOdcinek;
     a.pierwszyOdcinek = tmp.pierwszyOdcinek;
 }
