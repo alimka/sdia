@@ -48,6 +48,7 @@ void Book::drukuj(int i)
 {
     int licznik = 0;
     Book *ostatni = this;
+    ostatni = ostatni->next;
     while ((licznik < i)&&(ostatni->next != NULL))
     {
         ostatni = ostatni -> next;
