@@ -34,20 +34,32 @@ public:
 };
 
 HashTable::HashTable() {
+    elements = 0;
 }
 
-//int HashTable::hashujOdc(int nrOdc) {
-//    int pom = ();
-//    return (nrOdc * . * size); // size - rozmiar tablicy
-//}
-//
-//int HashTable::hashujSc(string tytSc, int nrSc) {
-//    int hash = tytSc.length() + nrSc;
-//    return (hash * . * size);
-//}
+int HashTable::hashujOdc(int nrOdc) {
+    return nrOdc % size;
+}
 
-void HashTable::powieksz () {
+int HashTable::hashujSc(string tytSc, int nrSc) {
+    int l = tytSc.length();
+    return (nrSc + l) % size;
+}
 
+void HashTable::powieksz() {
+    vector<Sc> * pom = vec;
+    size *= 2;
+    vec = new vector<Sc> [size];
+
+    for (int i = 0; i < elements; ++i) {
+        while (!pom[i].empty()) {
+            Sc tmp = pom[i].back();
+            pom[i].pop_back();
+            --elements;
+            dodaj(tmp.tytSc, tmp.nrOdc, tmp.nrSc);
+        }
+    }
+    delete [] pom;
 }
 
 int HashTable::jestFull() {
@@ -58,11 +70,16 @@ int HashTable::jestFull() {
 
 void HashTable::dodaj(string tyt, int nrOdc, int nrSc) {
     // jeśli tablica jest zapełniona w pewnym procencie powiększ ją
-    if (jestFull) powieksz();
+    if (jestFull()) powieksz();
 
     // użyj funkcji haszującej tyt i nrOdc oraz funkcji haszującej nrSc
+    int h1 = hashujOdc(nrOdc);
+    int h2 = hashujSc(tyt, nrSc);
 
-    // jeśli elemntu nie ma jeszcze w tablicy dodaj go
+    // jeśli elemntu nie ma jeszcze w tablicy dodaj go (do wyszukiwania można użyć zwykłej funkcji wyszukującej?)
+
+    // zwiększo elements o 1
+    elements++;
 }
 
 int main()
