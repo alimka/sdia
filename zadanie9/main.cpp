@@ -178,11 +178,10 @@ int main()
 {
     HashTable tab;
 
-    int liczbaOp, op, odc, sc;
+    int op, odc, sc;
     string tyt;
 
-    cin >> liczbaOp;
-    while (liczbaOp--)
+    while (true)
     {
         cin >> op;
         cin.ignore();
