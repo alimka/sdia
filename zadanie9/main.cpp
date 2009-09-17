@@ -21,15 +21,16 @@ bool operator==(const Sc& a,const Sc& b) {
 class HashTable {
 
     vector<Sc> * vec;
+
 public:
 
     int hashujSc (int nrSc);
     int hashujTyt (string tytSc, int nrOdc);
     void dodaj (string tyt, int nrOdc, int nrSc);
-    // void szukajPoScenie (int szukajSc);
+    void szukajPoScenie (int szukajSc);
     void szukajPoTytule (string szukajTyt, int szukajOdc);
-    // void deletScene (int deletSc);
-    // void deletOdcinek (string deletTyt, int deletOdc);
+    void deletScene (int deletSc);
+    void deletTyt (string deletTyt, int deletOdc);
     bool istnieje (int index, string tyt, int nrOdc, int nrSc);
     int jestFull ();
     void powieksz ();
@@ -105,7 +106,71 @@ void HashTable::szukajPoTytule(string szukajTyt, int szukajOdc) {
     int idx = hashujTyt(szukajTyt, szukajOdc);
 
     for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
-        if (*it.nrOdc == szukajOdc && *it.tytSc == szukajTyt) {}
+        if ( (*it).nrOdc == szukajOdc && (*it).tytSc == szukajTyt) {
+            cout << (*it).tytSc << endl;
+            cout << (*it).nrOdc << endl;
+            return;
+        }
+    }
+    cout << "NO" << endl;
+}
+
+void HashTable::szukajPoScenie(int szukajSc) {
+
+    int idx = hashujSc(szukajSc);
+
+    for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
+        if ( (*it).nrSc == szukajSc) {
+            cout << (*it).nrSc << endl;
+            return;
+        }
+    }
+    cout << "NO" << endl;
+}
+
+void HashTable::deletScene(int deletSc) {
+
+    string tyt;
+    int odc, idx2;
+    int idx = hashujSc(deletSc);
+
+    for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
+        if ( (*it).nrSc == deletSc) {
+            tyt = (*it).tytSc;
+            odc = (*it).nrOdc;
+            vec[idx].erase(it);
+            idx2 = hashujTyt(tyt, odc);
+            for (vector<Sc>::iterator it2 = vec[idx2].begin(); it2 != vec[idx2].end(); ++it2) {
+                if ( (*it2).tytSc == tyt && (*it2).nrOdc == odc ) {
+                    vec[idx2].erase(it2);
+                    break;
+                }
+            }
+            elements--;
+            return;
+        }
+    }
+}
+
+void HashTable::deletTyt(string deletTyt, int deletOdc) {
+
+    int sc, idx2;
+    int idx = hashujTyt(deletTyt, deletOdc);
+
+    for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
+        if ( (*it).nrOdc == deletOdc && (*it).tytSc == deletTyt) {
+            sc = (*it).nrSc;
+            vec[idx].erase(it);
+            idx2 = hashujSc(sc);
+            for (vector<Sc>::iterator it2 = vec[idx2].begin(); it2 != vec[idx2].end(); ++it2) {
+                if ((*it2).nrSc == sc ) {
+                    vec[idx2].erase(it2);
+                    break;
+                }
+            }
+            elements--;
+            return;
+        }
     }
 }
 
@@ -132,7 +197,7 @@ int main()
 
                 case 2: // Znajdź w bazie scenę o podanym numerze
                     cin >> sc;
-                    // szukajPoScenie (szukajSc);
+                    tab.szukajPoScenie(sc);
                     break;
 
                 case 3: // Znajdź w bazie scenę o podanych tytule i numerze odcinka
@@ -143,13 +208,13 @@ int main()
 
                 case 4: // Usuń z bazy scenę o podanym numerze
                     cin >> sc;
-                    // deletScene (deletSc);
+                    tab.deletScene(sc);
                     break;
 
                 case 5: // Usuń z bazy scenę o podanych tytule i numerze odcinka
                     getline (cin, tyt);
                     cin >> odc;
-                    // deletOdcinek (deletTyt, deletOdc);
+                    tab.deletTyt(tyt, odc);
                     break;
 
                 case 6: // Zakończ pracę programu
