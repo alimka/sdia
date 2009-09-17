@@ -43,7 +43,7 @@ public:
 
 HashTable::HashTable() {
     elements = 0;
-    size = 0;
+    size = 1;
     vec = new vector<Sc> [size];
 }
 
@@ -88,6 +88,7 @@ int HashTable::jestFull() {
 }
 
 void HashTable::dodaj(string tyt, int nrOdc, int nrSc) {
+
     if (jestFull()) powieksz();
 
     int h1 = hashujSc(nrSc);
