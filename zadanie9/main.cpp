@@ -6,19 +6,22 @@
 
 using namespace std;
 
+struct Sc {
+    int nrOdc, nrSc;
+    string tytSc;
+    Sc (string t, int o, int s):tytSc(t), nrOdc(o), nrSc(s) {}
+    friend bool operator==(const Sc& a,const Sc& b);
+};
+
+bool operator==(const Sc& a,const Sc& b) {
+    if (b.nrOdc == a.nrOdc && b.nrSc == a.nrSc && b.tytSc == a.tytSc) return true;
+    return false;
+}
+
 class HashTable {
 
-    struct Sc {
-        int nrOdc, nrSc;
-        string tytSc;
-        Sc (string t, int o, int s):tytSc(t), nrOdc(o), nrSc(s) {}
-        friend bool operator==(const Sc& a,const Sc& b) {
-            if (b.nrOdc == a.nrOdc && b.nrSc == a.nrSc && b.tytSc == a.tytSc) return true;
-            return false;
-        }
-    };
-
     vector<Sc> * vec;
+public:
 
     int hashujSc (int nrSc);
     int hashujTyt (string tytSc, int nrOdc);
@@ -31,7 +34,7 @@ class HashTable {
     int jestFull ();
     void powieksz ();
 
-public:
+
     int size, elements;
 
     HashTable();
@@ -39,6 +42,8 @@ public:
 
 HashTable::HashTable() {
     elements = 0;
+    size = 0;
+    vec = new vector<Sc> [size];
 }
 
 int HashTable::hashujSc(int nrSc) {
@@ -61,7 +66,7 @@ bool HashTable::istnieje(int index, string tyt, int nrOdc, int nrSc) {
 
 void HashTable::powieksz() {
     vector<Sc> * pom = vec;
-    size *= 2;
+    size = 2 * size + 1;
     vec = new vector<Sc> [size];
 
     for (int i = 0; i < elements; ++i) {
@@ -82,26 +87,26 @@ int HashTable::jestFull() {
 }
 
 void HashTable::dodaj(string tyt, int nrOdc, int nrSc) {
-    // jeśli tablica jest zapełniona w pewnym procencie powiększ ją
     if (jestFull()) powieksz();
 
-    // użyj funkcji haszującej tyt i nrOdc oraz funkcji haszującej nrSc
     int h1 = hashujSc(nrSc);
     int h2 = hashujTyt(tyt, nrOdc);
 
-    // jeśli elemntu nie ma jeszcze w tablicy dodaj go (do wyszukiwania można użyć zwykłej funkcji wyszukującej?)
     if (!istnieje(h1, tyt, nrOdc, nrSc) && !istnieje(h2, tyt, nrOdc, nrSc)) {
-
+        Sc a(tyt, nrOdc, nrSc);
+        vec[h1].push_back(a);
+        vec[h2].push_back(a);
+        elements++;
     }
-
-    // zwiększo elements o 1
-    elements++;
 }
 
 void HashTable::szukajPoTytule(string szukajTyt, int szukajOdc) {
+
     int idx = hashujTyt(szukajTyt, szukajOdc);
 
-    //for
+    for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
+        if (*it.nrOdc == szukajOdc && *it.tytSc == szukajTyt) {}
+    }
 }
 
 int main()
@@ -122,7 +127,7 @@ int main()
                     getline (cin, tyt);
                     cin >> odc;
                     cin >> sc;
-                    // dodaj (scena);
+                    tab.dodaj(tyt, odc, sc);
                     break;
 
                 case 2: // Znajdź w bazie scenę o podanym numerze
@@ -133,7 +138,7 @@ int main()
                 case 3: // Znajdź w bazie scenę o podanych tytule i numerze odcinka
                     getline (cin, tyt);
                     cin >> odc;
-                    // szukajPoOdcinku (szukajTyt, szukajOdc);
+                    tab.szukajPoTytule(tyt, odc);
                     break;
 
                 case 4: // Usuń z bazy scenę o podanym numerze
