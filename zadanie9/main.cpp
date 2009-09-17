@@ -60,17 +60,18 @@ int HashTable::hashujTyt(string tytSc, int nrOdc) {
 bool HashTable::istnieje(int index, string tyt, int nrOdc, int nrSc) {
     Sc a(tyt,nrOdc, nrSc);
     for (vector<Sc>::iterator it = vec[index].begin(); it != vec[index].end(); ++it) {
-        if (*it == a) return true;
+        //if (*it == a) return true;
+        if ((*it).nrOdc == nrOdc && (*it).tytSc == tyt && (*it).nrSc == nrSc) return true;
     }
     return false;
 }
 
 void HashTable::powieksz() {
     vector<Sc> * pom = vec;
-    size = 2 * size + 1;
-    vec = new vector<Sc> [size];
+    int nju_size = 2 * size + 1;
+    vec = new vector<Sc> [nju_size];
 
-    for (int i = 0; i < elements; ++i) {
+    for (int i = 0; i < size; ++i) {
         while (!pom[i].empty()) {
             Sc tmp = pom[i].back();
             pom[i].pop_back();
@@ -78,6 +79,7 @@ void HashTable::powieksz() {
             dodaj(tmp.tytSc, tmp.nrOdc, tmp.nrSc);
         }
     }
+    size = nju_size;
     delete [] pom;
 }
 
@@ -88,7 +90,6 @@ int HashTable::jestFull() {
 }
 
 void HashTable::dodaj(string tyt, int nrOdc, int nrSc) {
-
     if (jestFull()) powieksz();
 
     int h1 = hashujSc(nrSc);
@@ -108,8 +109,7 @@ void HashTable::szukajPoTytule(string szukajTyt, int szukajOdc) {
 
     for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
         if ( (*it).nrOdc == szukajOdc && (*it).tytSc == szukajTyt) {
-            cout << (*it).tytSc << endl;
-            cout << (*it).nrOdc << endl;
+            cout << (*it).nrSc << endl;
             return;
         }
     }
@@ -122,7 +122,8 @@ void HashTable::szukajPoScenie(int szukajSc) {
 
     for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
         if ( (*it).nrSc == szukajSc) {
-            cout << (*it).nrSc << endl;
+            cout << (*it).tytSc << endl;
+            cout << (*it).nrOdc << endl;
             return;
         }
     }
