@@ -11,8 +11,14 @@ class HashTable {
     struct Sc {
         int nrOdc, nrSc;
         string tytSc;
-
+        Sc (string t, int o, int s):tytSc(t), nrOdc(o), nrSc(s) {}
+        friend int operator==(const Sc& a,const Sc& b);
     };
+
+    int operator==(const Sc& a,const Sc& b) {
+        if (b.nrOdc == a.nrOdc && b.nrSc == a.nrSc && b.tytSc == a.tytSc) return true;
+        return false;
+    }
 
     vector<Sc> * vec;
 
@@ -23,7 +29,7 @@ class HashTable {
     // void szukajPoOdcinku (string szukajTyt, int szukajOdc);
     // void deletScene (int deletSc);
     // void deletOdcinek (string deletTyt, int deletOdc);
-    // bool czyIstnieje (string tyt, int nrOdc, int nrSc);
+    bool istnieje (int index, string tyt, int nrOdc, int nrSc);
     int jestFull ();
     void powieksz ();
 
@@ -38,12 +44,21 @@ HashTable::HashTable() {
 }
 
 int HashTable::hashujOdc(int nrOdc) {
-    return nrOdc % size;
+    return (nrOdc * nrOdc % size);
 }
 
 int HashTable::hashujSc(string tytSc, int nrSc) {
     int l = tytSc.length();
-    return (nrSc + l) % size;
+    int s = nrSc + l;
+    return (s * s % size);
+}
+
+bool HashTable::istnieje(int index, string tyt, int nrOdc, int nrSc) {
+    Sc a(tyt,nrOdc, nrSc);
+    for (vector<Sc>::iterator it = vec[index].begin(); it != vec[index].end(); ++it) {
+        if (it == a) return true;
+    }
+    return false;
 }
 
 void HashTable::powieksz() {
@@ -77,6 +92,9 @@ void HashTable::dodaj(string tyt, int nrOdc, int nrSc) {
     int h2 = hashujSc(tyt, nrSc);
 
     // jeśli elemntu nie ma jeszcze w tablicy dodaj go (do wyszukiwania można użyć zwykłej funkcji wyszukującej?)
+    if (!istnieje()) {
+
+    }
 
     // zwiększo elements o 1
     elements++;
