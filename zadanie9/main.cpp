@@ -12,21 +12,19 @@ class HashTable {
         int nrOdc, nrSc;
         string tytSc;
         Sc (string t, int o, int s):tytSc(t), nrOdc(o), nrSc(s) {}
-        friend int operator==(const Sc& a,const Sc& b);
+        friend bool operator==(const Sc& a,const Sc& b) {
+            if (b.nrOdc == a.nrOdc && b.nrSc == a.nrSc && b.tytSc == a.tytSc) return true;
+            return false;
+        }
     };
-
-    int operator==(const Sc& a,const Sc& b) {
-        if (b.nrOdc == a.nrOdc && b.nrSc == a.nrSc && b.tytSc == a.tytSc) return true;
-        return false;
-    }
 
     vector<Sc> * vec;
 
-    int hashujOdc (int nrOdc);
-    int hashujSc (string tytSc, int nrSc);
+    int hashujSc (int nrSc);
+    int hashujTyt (string tytSc, int nrOdc);
     void dodaj (string tyt, int nrOdc, int nrSc);
     // void szukajPoScenie (int szukajSc);
-    // void szukajPoOdcinku (string szukajTyt, int szukajOdc);
+    void szukajPoTytule (string szukajTyt, int szukajOdc);
     // void deletScene (int deletSc);
     // void deletOdcinek (string deletTyt, int deletOdc);
     bool istnieje (int index, string tyt, int nrOdc, int nrSc);
@@ -43,20 +41,20 @@ HashTable::HashTable() {
     elements = 0;
 }
 
-int HashTable::hashujOdc(int nrOdc) {
-    return (nrOdc * nrOdc % size);
+int HashTable::hashujSc(int nrSc) {
+    return (nrSc * nrSc % size);
 }
 
-int HashTable::hashujSc(string tytSc, int nrSc) {
+int HashTable::hashujTyt(string tytSc, int nrOdc) {
     int l = tytSc.length();
-    int s = nrSc + l;
+    int s = nrOdc + l;
     return (s * s % size);
 }
 
 bool HashTable::istnieje(int index, string tyt, int nrOdc, int nrSc) {
     Sc a(tyt,nrOdc, nrSc);
     for (vector<Sc>::iterator it = vec[index].begin(); it != vec[index].end(); ++it) {
-        if (it == a) return true;
+        if (*it == a) return true;
     }
     return false;
 }
@@ -88,16 +86,22 @@ void HashTable::dodaj(string tyt, int nrOdc, int nrSc) {
     if (jestFull()) powieksz();
 
     // użyj funkcji haszującej tyt i nrOdc oraz funkcji haszującej nrSc
-    int h1 = hashujOdc(nrOdc);
-    int h2 = hashujSc(tyt, nrSc);
+    int h1 = hashujSc(nrSc);
+    int h2 = hashujTyt(tyt, nrOdc);
 
     // jeśli elemntu nie ma jeszcze w tablicy dodaj go (do wyszukiwania można użyć zwykłej funkcji wyszukującej?)
-    if (!istnieje()) {
+    if (!istnieje(h1, tyt, nrOdc, nrSc) && !istnieje(h2, tyt, nrOdc, nrSc)) {
 
     }
 
     // zwiększo elements o 1
     elements++;
+}
+
+void HashTable::szukajPoTytule(string szukajTyt, int szukajOdc) {
+    int idx = hashujTyt(szukajTyt, szukajOdc);
+
+    //for
 }
 
 int main()
