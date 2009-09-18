@@ -10,7 +10,7 @@ struct Persona {
     Persona (string a, string p, int pO, int oO):aktor(a), postac(p), pierwszyOdcinek(pO), ostatniOdcinek(oO) {}
 };
 
-int pozycja, size;
+int pozycja(0), size(100);
 Persona * wsk;
 
 void powieksz() {
@@ -99,7 +99,7 @@ void sortujPostacie(int left, int right) { // MergeSort
 
 int main()
 {
-    wsk = new Persona [100];
+    wsk = new Persona[size];
 
     int liczbaPolecen, polecenie, index;
 
@@ -113,32 +113,34 @@ int main()
     while (liczbaPolecen--)
     {
         cin >> polecenie;
-        cin.ignore();
         switch(polecenie)
         {
         case 1: // Dodanie aktora na koniec listy.
             {
+                cin.ignore(99999, '\n');
                 getline (cin, aktor);
                 getline (cin, postac);
                 cin >> pierwszyOdcinek;
-                cin.ignore();
                 cin >> ostatniOdcinek;
-                cin.ignore();
+
+                cout << aktor << ", " << postac << ", " << pierwszyOdcinek << ", " << ostatniOdcinek << endl;
 
                 Persona a(aktor, postac, pierwszyOdcinek, ostatniOdcinek);
                 dodaj(a);
-                pozycja++;
+                ++pozycja;
                 break;
             }
-        case 2: // Posortowanie rosnąco listy  względem imion i nazwisk aktorów (algorytmem quicksort).
+        case 2: // Posortowanie rosn&#261;co listy  wzgl&#281;dem imion i nazwisk aktorów (algorytmem quicksort).
             {
+                sortujAktorow(0, size-1);
                 break;
             }
-        case 3: // Posortowanie rosnąco listy względem imion i nazwisk postaci (algorytmem mergesort).
+        case 3: // Posortowanie rosn&#261;co listy wzgl&#281;dem imion i nazwisk postaci (algorytmem mergesort).
             {
+                sortujPostacie(0, size-1);
                 break;
             }
-        case 4: // Wypisanie rekordu przechowywanego w liście na miejscu o zadanym indeksie
+        case 4: // Wypisanie rekordu przechowywanego w li&#347;cie na miejscu o zadanym indeksie
             {
                 cin >> index;
                 wyswietl(index);
