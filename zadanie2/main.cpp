@@ -113,11 +113,12 @@ int main()
     while (liczbaPolecen--)
     {
         cin >> polecenie;
+        cin.ignore();
         switch(polecenie)
         {
         case 1: // Dodanie aktora na koniec listy.
             {
-                cin.ignore(99999, '\n');
+                //cin.ignore(99999, '\n');
                 getline (cin, aktor);
                 getline (cin, postac);
                 cin >> pierwszyOdcinek;
@@ -132,12 +133,12 @@ int main()
             }
         case 2: // Posortowanie rosn&#261;co listy  wzgl&#281;dem imion i nazwisk aktorów (algorytmem quicksort).
             {
-                sortujAktorow(0, size-1);
+                sortujAktorow(0, pozycja-1);
                 break;
             }
         case 3: // Posortowanie rosn&#261;co listy wzgl&#281;dem imion i nazwisk postaci (algorytmem mergesort).
             {
-                sortujPostacie(0, size-1);
+                sortujPostacie(0, pozycja-1);
                 break;
             }
         case 4: // Wypisanie rekordu przechowywanego w li&#347;cie na miejscu o zadanym indeksie
