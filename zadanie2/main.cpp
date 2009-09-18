@@ -36,6 +36,67 @@ void wyswietl (int index) {
     cout << wsk[index].ostatniOdcinek << endl;
 }
 
+int dzielTablice(int left, int right) {
+    Persona x = wsk[right];
+    int i = left - 1;
+    Persona pom;
+    for (int j = left; j < right; ++j) {
+        if (wsk[j].aktor <= x.aktor) {
+            i++;
+            pom = wsk[i];
+            wsk[i] = wsk[j];
+            wsk[j] = pom;
+        }
+    }
+    pom = wsk[i+1];
+    wsk[i+1] = wsk[right];
+    wsk[right] = pom;
+    return i + 1;
+}
+
+void sortujAktorow(int left, int right) { // Quicksort
+    if (left < right) {
+        int dz = dzielTablice(left, right);
+        sortujAktorow(left, dz-1);
+        sortujAktorow(dz + 1, right);
+    }
+}
+
+void mergeTable(int left, int dz, int right) {
+    int x = (dz - left + 1);
+    int y = right - dz;
+    Persona X [x+1];
+    Persona Y [y+1];
+    Persona osoba;
+    osoba.postac = '~'; // ostatni znak w ASCII
+
+    for (int i = 0; i < x; ++i) X[i] = wsk[left + i];
+    for (int i = 0; i < y; ++i) Y[i] = wsk[dz + i + 1];
+
+    X[x] = Y[y] = osoba;
+
+    int i = 0;
+    int j = 0;
+    for (int k = left; k <= right; ++k) {
+        if (X[i].postac <= Y[j].postac) {
+            wsk[k] = X[i];
+            ++i;
+        } else {
+            wsk[k] = Y[j];
+            ++j;
+        }
+    }
+}
+
+void sortujPostacie(int left, int right) { // MergeSort
+    if (left < right) {
+        int dz = (left + right)/2;
+        sortujPostacie(left, dz);
+        sortujPostacie(dz + 1, right);
+        mergeTable(left, dz, right);
+    }
+}
+
 int main()
 {
     wsk = new Persona [100];
