@@ -21,17 +21,20 @@ bool operator==(const Sc& a,const Sc& b) {
 class HashTable {
 
     vector<Sc> * vec;
+    vector<Sc>::iterator it;
+    vector<Sc>::iterator it2;
+    int idx, idx2;
 
 public:
 
-    int hashujSc (int nrSc);
-    int hashujTyt (string tytSc, int nrOdc);
-    void dodaj (string tyt, int nrOdc, int nrSc);
+    int hashujSc (int &nrSc);
+    int hashujTyt (string &tytSc, int &nrOdc);
+    void dodaj (string &tyt, int nrOdc, int nrSc);
     void szukajPoScenie (int szukajSc);
-    void szukajPoTytule (string szukajTyt, int szukajOdc);
+    void szukajPoTytule (string &szukajTyt, int szukajOdc);
     void deletScene (int deletSc);
-    void deletTyt (string deletTyt, int deletOdc);
-    bool istnieje (int index, string tyt, int nrOdc, int nrSc);
+    void deletTyt (string &deletTyt, int deletOdc);
+    bool istnieje (int index, string &tyt, int nrOdc, int nrSc);
     int jestFull ();
     void powieksz ();
 
@@ -43,24 +46,24 @@ public:
 
 HashTable::HashTable() {
     elements = 0;
-    size = 1;
+    size = 10000;
     vec = new vector<Sc> [size];
 }
 
-int HashTable::hashujSc(int nrSc) {
-    return (nrSc * nrSc % size);
+int HashTable::hashujSc(int &nrSc) {
+    return (abs(nrSc * nrSc) % size);
 }
 
-int HashTable::hashujTyt(string tytSc, int nrOdc) {
+int HashTable::hashujTyt(string &tytSc, int &nrOdc) {
     int l = tytSc.length();
     int s = nrOdc + l;
-    return (s * s % size);
+    return (abs(s * s) % size);
 }
 
-bool HashTable::istnieje(int index, string tyt, int nrOdc, int nrSc) {
-    Sc a(tyt,nrOdc, nrSc);
-    for (vector<Sc>::iterator it = vec[index].begin(); it != vec[index].end(); ++it) {
-        //if (*it == a) return true;
+bool HashTable::istnieje(int index, string &tyt, int nrOdc, int nrSc) {
+    // Sc a(tyt,nrOdc, nrSc);
+    for (it = vec[index].begin(); it != vec[index].end(); ++it) {
+
         if ((*it).nrOdc == nrOdc && (*it).tytSc == tyt && (*it).nrSc == nrSc) return true;
     }
     return false;
@@ -68,10 +71,11 @@ bool HashTable::istnieje(int index, string tyt, int nrOdc, int nrSc) {
 
 void HashTable::powieksz() {
     vector<Sc> * pom = vec;
-    int nju_size = 2 * size + 1;
-    vec = new vector<Sc> [nju_size];
+    int old_size = size;
+    size = 2 * old_size + 1;
+    vec = new vector<Sc> [size];
 
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < old_size; ++i) {
         while (!pom[i].empty()) {
             Sc tmp = pom[i].back();
             pom[i].pop_back();
@@ -79,7 +83,6 @@ void HashTable::powieksz() {
             dodaj(tmp.tytSc, tmp.nrOdc, tmp.nrSc);
         }
     }
-    size = nju_size;
     delete [] pom;
 }
 
@@ -89,25 +92,26 @@ int HashTable::jestFull() {
     return 0;
 }
 
-void HashTable::dodaj(string tyt, int nrOdc, int nrSc) {
-    if (jestFull()) powieksz();
+void HashTable::dodaj(string &tyt, int nrOdc, int nrSc) {
+    if (jestFull())
+        powieksz();
 
-    int h1 = hashujSc(nrSc);
-    int h2 = hashujTyt(tyt, nrOdc);
+    idx = hashujSc(nrSc);
+    idx2 = hashujTyt(tyt, nrOdc);
 
-    if (!istnieje(h1, tyt, nrOdc, nrSc) && !istnieje(h2, tyt, nrOdc, nrSc)) {
+    if (!istnieje(idx, tyt, nrOdc, nrSc) && !istnieje(idx2, tyt, nrOdc, nrSc)) {
         Sc a(tyt, nrOdc, nrSc);
-        vec[h1].push_back(a);
-        vec[h2].push_back(a);
+        vec[idx].push_back(a);
+        vec[idx2].push_back(a);
         elements++;
     }
 }
 
-void HashTable::szukajPoTytule(string szukajTyt, int szukajOdc) {
+void HashTable::szukajPoTytule(string &szukajTyt, int szukajOdc) {
 
-    int idx = hashujTyt(szukajTyt, szukajOdc);
+    idx = hashujTyt(szukajTyt, szukajOdc);
 
-    for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
+    for (it = vec[idx].begin(); it != vec[idx].end(); ++it) {
         if ( (*it).nrOdc == szukajOdc && (*it).tytSc == szukajTyt) {
             cout << (*it).nrSc << endl;
             return;
@@ -118,9 +122,9 @@ void HashTable::szukajPoTytule(string szukajTyt, int szukajOdc) {
 
 void HashTable::szukajPoScenie(int szukajSc) {
 
-    int idx = hashujSc(szukajSc);
+    idx = hashujSc(szukajSc);
 
-    for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
+    for (it = vec[idx].begin(); it != vec[idx].end(); ++it) {
         if ( (*it).nrSc == szukajSc) {
             cout << (*it).tytSc << endl;
             cout << (*it).nrOdc << endl;
@@ -133,16 +137,16 @@ void HashTable::szukajPoScenie(int szukajSc) {
 void HashTable::deletScene(int deletSc) {
 
     string tyt;
-    int odc, idx2;
-    int idx = hashujSc(deletSc);
+    int odc;
+    idx = hashujSc(deletSc);
 
-    for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
+    for (it = vec[idx].begin(); it != vec[idx].end(); ++it) {
         if ( (*it).nrSc == deletSc) {
             tyt = (*it).tytSc;
             odc = (*it).nrOdc;
             vec[idx].erase(it);
             idx2 = hashujTyt(tyt, odc);
-            for (vector<Sc>::iterator it2 = vec[idx2].begin(); it2 != vec[idx2].end(); ++it2) {
+            for (it2 = vec[idx2].begin(); it2 != vec[idx2].end(); ++it2) {
                 if ( (*it2).tytSc == tyt && (*it2).nrOdc == odc ) {
                     vec[idx2].erase(it2);
                     break;
@@ -154,17 +158,17 @@ void HashTable::deletScene(int deletSc) {
     }
 }
 
-void HashTable::deletTyt(string deletTyt, int deletOdc) {
+void HashTable::deletTyt(string &deletTyt, int deletOdc) {
 
-    int sc, idx2;
-    int idx = hashujTyt(deletTyt, deletOdc);
+    int sc;
+    idx = hashujTyt(deletTyt, deletOdc);
 
-    for (vector<Sc>::iterator it = vec[idx].begin(); it != vec[idx].end(); ++it) {
+    for (it = vec[idx].begin(); it != vec[idx].end(); ++it) {
         if ( (*it).nrOdc == deletOdc && (*it).tytSc == deletTyt) {
             sc = (*it).nrSc;
             vec[idx].erase(it);
             idx2 = hashujSc(sc);
-            for (vector<Sc>::iterator it2 = vec[idx2].begin(); it2 != vec[idx2].end(); ++it2) {
+            for (it2 = vec[idx2].begin(); it2 != vec[idx2].end(); ++it2) {
                 if ((*it2).nrSc == sc ) {
                     vec[idx2].erase(it2);
                     break;
