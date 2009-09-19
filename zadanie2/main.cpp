@@ -100,16 +100,17 @@ void sortujPostacie(int left, int right) { // MergeSort
 int main()
 {
     wsk = new Persona[size];
+    pozycja = 0;
 
     int liczbaPolecen, polecenie, index;
 
     string aktor, postac;
     int pierwszyOdcinek, ostatniOdcinek;
 
-    pozycja = 0;
+
 
     cin >> liczbaPolecen;
-    cin.ignore();
+
     while (liczbaPolecen--)
     {
         cin >> polecenie;
@@ -119,29 +120,30 @@ int main()
         case 1: // Dodanie aktora na koniec listy.
             {
                 //cin.ignore(99999, '\n');
+                // cin.ignore();
                 getline (cin, aktor);
                 getline (cin, postac);
                 cin >> pierwszyOdcinek;
                 cin >> ostatniOdcinek;
 
-                cout << aktor << ", " << postac << ", " << pierwszyOdcinek << ", " << ostatniOdcinek << endl;
+                // cout << aktor << ", " << postac << ", " << pierwszyOdcinek << ", " << ostatniOdcinek << endl;
 
                 Persona a(aktor, postac, pierwszyOdcinek, ostatniOdcinek);
                 dodaj(a);
                 ++pozycja;
                 break;
             }
-        case 2: // Posortowanie rosn&#261;co listy  wzgl&#281;dem imion i nazwisk aktorów (algorytmem quicksort).
+        case 2: // Posortowanie rosnąco listy  względem imion i nazwisk aktorów (algorytmem quicksort).
             {
                 sortujAktorow(0, pozycja-1);
                 break;
             }
-        case 3: // Posortowanie rosn&#261;co listy wzgl&#281;dem imion i nazwisk postaci (algorytmem mergesort).
+        case 3: // Posortowanie rosnąco listy względem imion i nazwisk postaci (algorytmem mergesort).
             {
                 sortujPostacie(0, pozycja-1);
                 break;
             }
-        case 4: // Wypisanie rekordu przechowywanego w li&#347;cie na miejscu o zadanym indeksie
+        case 4: // Wypisanie rekordu przechowywanego w liście na miejscu o zadanym indeksie
             {
                 cin >> index;
                 wyswietl(index);
