@@ -13,24 +13,25 @@ struct Element {
 
 bool cmp (Element i, Element j) { // posortuj do lewej wzg. końców przedziałów (jeśli końce są równe to początków)
     if (i.kn != j.kn) return (i.kn < j.kn);
-    return (i.st < j.st);
+    return (i.st > j.st);
 }
 
 vector<Element> vec; // vector elementów
 int wynik[10001]; // tablica wyników
-bool flaga[10001];
+int flaga[10001];
 
 int main()
 {
     int n;
     Element a;
     int i, j;
+    int licznik_wiez = 0;
 
     scanf("%d", &n);
     for (i = 0; i < n; ++i)
     {
         scanf("%d %d", &a.st, &a.kn);
-        a.poz = i + 1;
+        a.poz = i;
         vec.push_back(a);
     }
 
@@ -41,8 +42,11 @@ int main()
             if (!flaga[j]) { // sprawdź flagę
                 flaga[j] = 1;
                 wynik[vec[i].poz] = j;
+                licznik_wiez++;
                 break;
             }
         }
     }
+    if (licznik_wiez == n) for (int i = 0; i < n; i++) cout << wynik[i] << endl;
+    else cout << "NIE" << endl;
 }
